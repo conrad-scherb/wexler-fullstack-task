@@ -1,0 +1,16 @@
+{
+    "name": "@conrad-scherb/wexler-fullstack-task",
+    "version": "1.0.0",
+    "description": "Wexler Fullstack Coding Task",
+    "main": "index.js",
+    "repository": "git@github.com:conrad-scherb/wexler-fullstack-task.git",
+    "author": "Conrad Scherb",
+    "license": "NONE",
+    "private": true,
+    "scripts": {
+      "dev": "yarn concurrently -n \"frontend,backend\" -c \"cyan,green\" \"yarn --cwd ui serve\" \"yarn --cwd api start:dev\""},
+    "devDependencies": {
+      "concurrently": "^8.2.2"
+    }
+  }
+  
