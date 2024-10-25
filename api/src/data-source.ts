@@ -14,3 +14,7 @@ const AppDataSource = new DataSource({
 export async function setupTypeORM(): Promise<void> {
   await AppDataSource.initialize();
 }
+
+export async function getImageRepository() {
+  return AppDataSource.getRepository(UploadedImage);
+}

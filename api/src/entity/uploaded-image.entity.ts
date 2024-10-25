@@ -6,8 +6,8 @@ export class UploadedImage {
   id: number;
 
   @Column({ type: "text" })
-  name: string;
-
-  @Column({ type: "text" })
   imgurURL: string;
+
+  @Column({ type: "json" })
+  metadata: Record<string, unknown>;
 }
