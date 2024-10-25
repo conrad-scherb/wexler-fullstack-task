@@ -1,18 +1,27 @@
 import axios from "axios";
+import { Repository } from "typeorm";
 import { z } from "zod";
+import { UploadedImage } from "./entity/uploaded-image.entity";
+import { recordUploadedImage } from "./image-database";
 import { getImgurAuthorization } from "./imgur-api-helpers";
 
 const ImgurImageUploadResponseSchema = z.object({
-  data: z.object({
-    link: z.string(),
-  }),
+  data: z
+    .object({
+      link: z.string(),
+    })
+    .passthrough(),
 });
 
 export type ImgurImageUploadResponse = z.infer<
   typeof ImgurImageUploadResponseSchema
 >;
 
-export async function uploadImage(
+export type UploadSingleImageResult =
+  | { result: "success"; image: UploadedImage }
+  | { result: "error"; message: string };
+
+export async function uploadImageToImgur(
   image: Express.Multer.File
 ): Promise<ImgurImageUploadResponse> {
   // Convert the Multer image to a Blob via FormData
@@ -32,4 +41,27 @@ export async function uploadImage(
   const parsedBody = ImgurImageUploadResponseSchema.parse(body);
 
   return parsedBody;
+}
+
+export async function uploadAndRecordSingleImage(
+  imageRepository: Repository<UploadedImage>,
+  file: Express.Multer.File
+): Promise<UploadSingleImageResult> {
+  try {
+    const imageDetails = await uploadImageToImgur(file);
+
+    // Save the image details to the database
+    const uploadedImageEntity = await recordUploadedImage(
+      imageRepository,
+      imageDetails
+    );
+
+    return { result: "success", image: uploadedImageEntity };
+  } catch (e) {
+    const statusCode = axios.isAxiosError(e) ? e.response?.status : 500;
+    return {
+      result: "error",
+      message: `${statusCode ?? "Unexpected error"}: e.message`,
+    };
+  }
 }

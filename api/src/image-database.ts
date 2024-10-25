@@ -5,8 +5,8 @@ import { ImgurImageUploadResponse } from "./imgur-upload";
 export async function recordUploadedImage(
   repository: Repository<UploadedImage>,
   imageUploadResponse: ImgurImageUploadResponse
-): Promise<void> {
-  await repository.save({
+): Promise<UploadedImage> {
+  return await repository.save({
     imgurURL: imageUploadResponse.data.link,
     metadata: imageUploadResponse.data,
   });
