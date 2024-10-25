@@ -11,3 +11,7 @@ export async function recordUploadedImage(
     metadata: imageUploadResponse.data,
   });
 }
+
+export async function retrieveAllImages(repository: Repository<UploadedImage>) {
+  return await repository.find();
+}

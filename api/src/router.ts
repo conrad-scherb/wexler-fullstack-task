@@ -3,23 +3,33 @@ import multer from "multer";
 import { getImageRepository, setupTypeORM } from "./data-source";
 import { uploadAndRecordSingleImage } from "./imgur-upload";
 
-void setupTypeORM();
+export async function setupRouter(port: string) {
+  await setupTypeORM();
 
-const api = express();
-const upload = multer();
+  const api = express();
+  const upload = multer();
 
-api.post("/upload/", upload.array("images"), async (req, res) => {
   const imageRepository = await getImageRepository();
 
-  const files = Array.isArray(req.files)
-    ? req.files
-    : Object.values(req.files).flat();
+  api.get("/images/", async (req, res) => {
+    const images = await imageRepository.find();
 
-  const responses = await Promise.all(
-    files.map((f) => uploadAndRecordSingleImage(imageRepository, f))
-  );
+    res.json(images);
+  });
 
-  res.json(responses);
-});
+  api.post("/upload/", upload.array("images"), async (req, res) => {
+    const files = Array.isArray(req.files)
+      ? req.files
+      : Object.values(req.files).flat();
 
-export default api;
+    const responses = await Promise.all(
+      files.map((f) => uploadAndRecordSingleImage(imageRepository, f))
+    );
+
+    res.json(responses);
+  });
+
+  api.listen(port, () => {
+    console.log("Server setup successfully on port " + port);
+  });
+}
