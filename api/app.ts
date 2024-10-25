@@ -1,4 +1,4 @@
-import router from "./router";
+import router from "./src/router";
 
 const port = process.env.PORT || 9001;
 router.listen(port, () => {

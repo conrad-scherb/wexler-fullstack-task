@@ -1,4 +1,7 @@
 import express from "express";
+import { setupTypeORM } from "./data-source";
+
+void setupTypeORM();
 
 const api = express();
 
