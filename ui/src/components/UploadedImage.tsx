@@ -3,7 +3,9 @@ import { UploadedImageGetOneDto } from "../../../api/src/dto/uploaded-image-get.
 export function UploadedImage(imageDetails: UploadedImageGetOneDto) {
   return (
     <div className="flex flex-col items-center">
-      <img src={`data:image/jpeg;base64,${imageDetails.thumbnail}`} />
+      <a href={`/api/image/${imageDetails.id}`} download>
+        <img src={`data:image/jpeg;base64,${imageDetails.thumbnail}`} />
+      </a>
       <div>
         {imageDetails.metadata.title?.split(".").slice(0, -1).join(".")}
       </div>

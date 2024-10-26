@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import { getImageRepository, setupTypeORM } from "./data-source";
-import { retrieveAllImages } from "./image-database";
+import { retrieveAllImages, retrieveImage } from "./image-database";
 import { uploadAndRecordSingleImage } from "./imgur-upload";
 
 export async function setupRouter(port: string) {
@@ -11,6 +11,10 @@ export async function setupRouter(port: string) {
   const upload = multer();
 
   const imageRepository = await getImageRepository();
+
+  api.get("/api/image/:id", async (req, res) => {
+    await retrieveImage(imageRepository, req.params.id, res);
+  });
 
   api.get("/api/images/", async (_, res) => {
     res.json(await retrieveAllImages(imageRepository));
