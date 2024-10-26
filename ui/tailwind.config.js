@@ -8,6 +8,9 @@ export default {
 
   theme: {
     extend: {
+      spacing: {
+        25: "6.25rem",
+      },
       gridTemplateColumns: {
         thumbnail: "repeat(auto-fit, minmax(100px, max-content))",
       },

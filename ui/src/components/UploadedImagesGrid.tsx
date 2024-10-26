@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import {
   UploadedImageGetManyDto,
   UploadedImageGetManyDtoSchema,
-} from "../../api/src/dto/uploaded-image-get.dto";
-import { UploadedImage } from "./components/UploadedImage";
+} from "../../../api/src/dto/uploaded-image-get.dto";
+import { UploadedImage } from "./UploadedImage";
 
 async function retrieveImages(): Promise<UploadedImageGetManyDto> {
   const response = await axios.get("/api/images");
