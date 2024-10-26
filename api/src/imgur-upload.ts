@@ -29,6 +29,7 @@ export async function uploadImageToImgur(
   const blob = new Blob([image.buffer]);
 
   formData.append("image", blob);
+  formData.append("title", image.originalname);
 
   const response = await axios.post("https://api.imgur.com/3/image", formData, {
     headers: {

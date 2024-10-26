@@ -5,4 +5,12 @@ export default {
     extend: {},
   },
   plugins: [],
+
+  theme: {
+    extend: {
+      gridTemplateColumns: {
+        thumbnail: "repeat(auto-fit, minmax(100px, max-content))",
+      },
+    },
+  },
 };

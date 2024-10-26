@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Suspense } from "react";
 import {
@@ -14,18 +14,30 @@ async function retrieveImages(): Promise<UploadedImageGetManyDto> {
 }
 
 function ViewImagesLoader() {
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["images"],
     queryFn: retrieveImages,
   });
 
-  return data?.map((image) => <UploadedImage key={image.id} {...image} />);
+  return (
+    <div className="grid grid-cols-thumbnail gap-2">
+      {data?.map((image) => (
+        <UploadedImage key={image.id} {...image} />
+      ))}
+    </div>
+  );
 }
 
 export function ViewUploadedImagesView() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ViewImagesLoader />
-    </Suspense>
+    <div className="flex flex-col gap-2">
+      <div className="italic">
+        Click on a image thumbnail to download the full size image.
+      </div>
+
+      <Suspense fallback={<div>Loading...</div>}>
+        <ViewImagesLoader />
+      </Suspense>
+    </div>
   );
 }
