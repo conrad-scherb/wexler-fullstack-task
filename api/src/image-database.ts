@@ -8,10 +8,12 @@ import { ImgurImageUploadResponse } from "./imgur-upload";
 
 export async function recordUploadedImage(
   repository: Repository<UploadedImage>,
+  id: string,
   imageUploadResponse: ImgurImageUploadResponse,
   thumbnailBase64String: string
 ): Promise<UploadedImage> {
   return await repository.save({
+    id,
     metadata: imageUploadResponse.data,
     thumbnail: thumbnailBase64String,
   });

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Response } from "express";
 import { Repository } from "typeorm";
 import { z } from "zod";
 import { UploadedImage } from "./entity/uploaded-image.entity";
@@ -16,10 +17,6 @@ const ImgurImageUploadResponseSchema = z.object({
 export type ImgurImageUploadResponse = z.infer<
   typeof ImgurImageUploadResponseSchema
 >;
-
-export type UploadSingleImageResult =
-  | { result: "success"; image: UploadedImage }
-  | { result: "error"; message: string };
 
 export async function uploadImageToImgur(
   image: Express.Multer.File
@@ -44,28 +41,39 @@ export async function uploadImageToImgur(
   return parsedBody;
 }
 
+function streamJSONEvent(res: Response, json: unknown): void {
+  // Use the data: prefix and the \n\n separator to confirm with EventSource standard
+  // See https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#event_stream_format
+  res.write(`data: ${JSON.stringify(json)}\n\n`);
+}
+
 export async function uploadAndRecordSingleImage(
   imageRepository: Repository<UploadedImage>,
-  file: Express.Multer.File
-): Promise<UploadSingleImageResult> {
+  res: Response,
+  file: Express.Multer.File,
+  id: string
+): Promise<void> {
+  const start = performance.now();
+
   try {
     const imageDetails = await uploadImageToImgur(file);
 
     const thumbnail = await createImageThumbnail(file.buffer);
 
     // Save the image details to the database
-    const uploadedImageEntity = await recordUploadedImage(
-      imageRepository,
-      imageDetails,
-      thumbnail
-    );
+    await recordUploadedImage(imageRepository, id, imageDetails, thumbnail);
 
-    return { result: "success", image: uploadedImageEntity };
+    streamJSONEvent(res, { id, result: "success" });
   } catch (e) {
     const statusCode = axios.isAxiosError(e) ? e.response?.status : 500;
-    return {
+    streamJSONEvent(res, {
+      id,
       result: "error",
       message: `${statusCode ?? "Unexpected error"}: ${e.message}`,
-    };
+    });
   }
+
+  const end = performance.now();
+
+  console.log(`Image upload took ${end - start}ms`);
 }

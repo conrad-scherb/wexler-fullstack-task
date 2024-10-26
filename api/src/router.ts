@@ -21,15 +21,27 @@ export async function setupRouter(port: string) {
   });
 
   api.post("/api/upload/", upload.array("images"), async (req, res) => {
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Connection", "keep-alive");
+    res.flushHeaders();
+
+    res.on("close", res.end);
+
     const files = Array.isArray(req.files)
       ? req.files
       : Object.values(req.files).flat();
 
-    const responses = await Promise.all(
-      files.map((f) => uploadAndRecordSingleImage(imageRepository, f))
+    const fileIds = JSON.parse(req.body.ids);
+
+    await Promise.all(
+      files.map((f, i) =>
+        uploadAndRecordSingleImage(imageRepository, res, f, fileIds[i])
+      )
     );
 
-    res.json(responses);
+    res.end();
   });
 
   api.listen(port, () => {
