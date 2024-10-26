@@ -34,7 +34,7 @@ export async function retrieveImage(
   const image = await repository.findOneByOrFail({ id });
 
   const response = await axios.get(image.metadata.link, {
-    responseType: "arraybuffer",
+    responseType: "stream",
   });
 
   const contentType = response.headers["content-type"];
@@ -46,5 +46,6 @@ export async function retrieveImage(
       image.metadata.title ?? mimedb[contentType].extensions[0]
     }`
   );
-  res.send(response.data);
+
+  response.data.pipe(res);
 }
