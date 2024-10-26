@@ -11,7 +11,7 @@ export async function setupRouter(port: string) {
 
   const imageRepository = await getImageRepository();
 
-  api.get("/images/", async (req, res) => {
+  api.get("/images/", async (_, res) => {
     const images = await imageRepository.find();
 
     res.json(images);

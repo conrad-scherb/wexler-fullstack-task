@@ -3,7 +3,6 @@ import { Repository } from "typeorm";
 import { z } from "zod";
 import { UploadedImage } from "./entity/uploaded-image.entity";
 import { recordUploadedImage } from "./image-database";
-import { getImgurAuthorization } from "./imgur-api-helpers";
 
 const ImgurImageUploadResponseSchema = z.object({
   data: z
@@ -33,7 +32,7 @@ export async function uploadImageToImgur(
   const response = await axios.post("https://api.imgur.com/3/image", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: getImgurAuthorization(),
+      Authorization: `Client-ID ${process.env.IMGUR_CLIENT_ID}`,
     },
   });
 
