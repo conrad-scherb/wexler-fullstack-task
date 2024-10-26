@@ -1,4 +1,4 @@
-import imageThumbnail from "image-thumbnail";
+import sharp from "sharp";
 
 const options = {
   width: 100,
@@ -11,5 +11,16 @@ const options = {
 export async function createImageThumbnail(
   imageBuffer: Buffer
 ): Promise<string> {
-  return await imageThumbnail(imageBuffer, options);
+  let result = sharp(imageBuffer)
+    .resize({
+      height: 100,
+      width: 100,
+      withoutEnlargement: true,
+      fit: "contain",
+      background: "#ffffff",
+    })
+    .flatten({ background: "#ffffff" })
+    .jpeg({ force: true });
+
+  return (await result.toBuffer()).toString("base64");
 }
