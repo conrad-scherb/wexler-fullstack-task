@@ -11,13 +11,13 @@ export async function setupRouter(port: string) {
 
   const imageRepository = await getImageRepository();
 
-  api.get("/images/", async (_, res) => {
+  api.get("/api/images/", async (_, res) => {
     const images = await imageRepository.find();
 
     res.json(images);
   });
 
-  api.post("/upload/", upload.array("images"), async (req, res) => {
+  api.post("/api/upload/", upload.array("images"), async (req, res) => {
     const files = Array.isArray(req.files)
       ? req.files
       : Object.values(req.files).flat();
