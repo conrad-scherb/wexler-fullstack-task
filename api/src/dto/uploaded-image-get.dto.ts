@@ -1,10 +1,19 @@
 import { z } from "zod";
 
+export const MetadataSchema = z
+  .object({
+    link: z.string(),
+    title: z.string().nullable(),
+  })
+  .and(z.record(z.unknown()));
+
+export type Metadata = z.infer<typeof MetadataSchema>;
+
 export const UploadedImageGetManyDtoSchema = z
   .object({
     id: z.string(),
-    imgurURL: z.string(),
-    metadata: z.record(z.unknown()),
+    thumbnail: z.string(),
+    metadata: MetadataSchema,
   })
   .array();
 
