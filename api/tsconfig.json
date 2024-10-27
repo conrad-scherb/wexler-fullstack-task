@@ -4,7 +4,8 @@
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "esModuleInterop": true
   },
   "ts-node": {
     "esm": true
