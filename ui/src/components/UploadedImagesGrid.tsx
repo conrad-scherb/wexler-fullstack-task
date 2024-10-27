@@ -31,9 +31,7 @@ function ViewImagesLoader() {
 export function ViewUploadedImagesView() {
   return (
     <div className="flex flex-col gap-2">
-      <div className="italic">
-        Click on a image thumbnail to download the full size image.
-      </div>
+      <em>Click on a image thumbnail to download the full size image.</em>
 
       <Suspense fallback={<div>Loading...</div>}>
         <ViewImagesLoader />

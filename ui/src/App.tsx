@@ -1,8 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import cn from "classnames";
 import { useState } from "react";
 import { ViewUploadedImagesView } from "./components/UploadedImagesGrid";
 import { UploadImagesForm } from "./components/UploadImagesForm";
+import { ViewOrUploadSwitch } from "./components/ViewOrUploadSwitch";
 
 export function App() {
   const queryClient = new QueryClient();
@@ -12,30 +12,12 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex flex-col gap-4">
-        <div className="pt-4 text-3xl font-semibold">
-          Image Management System
-        </div>
-        <div className="flex gap-4 text-xl">
-          <span
-            className={cn(
-              "w-12 cursor-pointer hover:underline",
-              !isInUploadMode && " font-semibold underline"
-            )}
-            onClick={() => setIsInUploadMode(false)}
-          >
-            View
-          </span>
-          |
-          <span
-            className={cn(
-              "w-12 cursor-pointer hover:underline",
-              isInUploadMode && " font-semibold underline"
-            )}
-            onClick={() => setIsInUploadMode(true)}
-          >
-            Upload
-          </span>
-        </div>
+        <h1 className="pt-4 text-3xl font-semibold">Image Management System</h1>
+
+        <ViewOrUploadSwitch
+          isInUploadMode={isInUploadMode}
+          setIsInUploadMode={setIsInUploadMode}
+        />
 
         {isInUploadMode ? <UploadImagesForm /> : <ViewUploadedImagesView />}
       </div>
