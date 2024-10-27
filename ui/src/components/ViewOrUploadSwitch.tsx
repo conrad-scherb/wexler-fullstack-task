@@ -7,11 +7,14 @@ export function ViewOrUploadSwitch({
   isInUploadMode: boolean;
   setIsInUploadMode: (value: boolean) => void;
 }) {
+  const headerButtonClasses = "w-12 cursor-pointer hover:underline";
+
   return (
     <div className="flex gap-4 text-xl">
       <button
+        data-testid="view-mode-button"
         className={cn(
-          "w-12 cursor-pointer hover:underline",
+          headerButtonClasses,
           !isInUploadMode && " font-semibold underline"
         )}
         onClick={() => setIsInUploadMode(false)}
@@ -20,8 +23,9 @@ export function ViewOrUploadSwitch({
       </button>
       |
       <button
+        data-testid="upload-mode-button"
         className={cn(
-          "w-12 cursor-pointer hover:underline",
+          headerButtonClasses,
           isInUploadMode && " font-semibold underline"
         )}
         onClick={() => setIsInUploadMode(true)}

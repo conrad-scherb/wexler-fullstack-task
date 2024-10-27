@@ -1,3 +1,5 @@
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Suspense } from "react";
@@ -20,7 +22,7 @@ function ViewImagesLoader() {
   });
 
   return (
-    <div className="grid grid-cols-thumbnail gap-2">
+    <div data-testid="images-grid" className="grid grid-cols-thumbnail gap-2">
       {data?.map((image) => (
         <UploadedImage key={image.id} {...image} />
       ))}
@@ -28,12 +30,22 @@ function ViewImagesLoader() {
   );
 }
 
-export function ViewUploadedImagesView() {
+export function ViewUploadedImages() {
   return (
     <div className="flex flex-col gap-2">
       <em>Click on a image thumbnail to download the full size image.</em>
 
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <FontAwesomeIcon
+            data-testid="loading-images-spinner"
+            icon={faSpinner}
+            spin
+            size="2xl"
+            className="pt-4"
+          />
+        }
+      >
         <ViewImagesLoader />
       </Suspense>
     </div>

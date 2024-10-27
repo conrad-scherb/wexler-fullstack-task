@@ -1,65 +1,15 @@
-import { faCheck, faSpinner, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useEffect, useState } from "react";
-import { FileWithPath, useDropzone } from "react-dropzone";
-import { Tooltip } from "react-tooltip";
+import { useDropzone } from "react-dropzone";
 import { v4 } from "uuid";
 import { UploadSingleImageResultSchema } from "../../../api/src/dto/upload-image-response.dto";
-import { removeFileExtension } from "../util";
-
-enum FileUploadState {
-  Uploading,
-  Done,
-  Failed,
-}
-
-interface FileUploadTask {
-  id: string;
-  file: FileWithPath;
-  status: FileUploadState;
-  error?: string;
-}
-
-function ErroredUploadTooltip({ task }: { task: FileUploadTask }) {
-  const tooltipId = `error-tooltip-${task.id}`;
-
-  return (
-    <>
-      <a
-        className="grid place-content-center h-4"
-        data-tooltip-id={tooltipId}
-        data-tooltip-content={task.error}
-        data-tooltip-place="top"
-      >
-        <FontAwesomeIcon color="red" icon={faTimes} />
-      </a>
-
-      <Tooltip id={tooltipId} />
-    </>
-  );
-}
+import { FileUploadState, FileUploadTask } from "../file-upload";
+import { InProgressImageUpload } from "./InProgressImageUpload";
 
 function FilesUploadTaskGrid({ tasks }: { tasks: FileUploadTask[] }) {
   return (
     <div className="grid grid-cols-thumbnail w-full gap-4">
       {tasks.map((task) => (
-        <div key={task.id} className="flex items-center flex-col gap-2">
-          <img
-            src={URL.createObjectURL(task.file)}
-            alt={task.file.path}
-            className="w-25 h-25 object-contain"
-          />
-
-          <div>{removeFileExtension(task.file.path ?? "")}</div>
-
-          {task.status === FileUploadState.Uploading ? (
-            <FontAwesomeIcon icon={faSpinner} spin />
-          ) : task.status === FileUploadState.Done ? (
-            <FontAwesomeIcon color="green" icon={faCheck} />
-          ) : (
-            <ErroredUploadTooltip task={task} />
-          )}
-        </div>
+        <InProgressImageUpload key={task.id} {...task} />
       ))}
     </div>
   );

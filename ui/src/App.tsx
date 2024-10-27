@@ -1,8 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
-import { ViewUploadedImagesView } from "./components/UploadedImagesGrid";
 import { UploadImagesForm } from "./components/UploadImagesForm";
 import { ViewOrUploadSwitch } from "./components/ViewOrUploadSwitch";
+import { ViewUploadedImages } from "./components/ViewUploadedImages";
 
 export function App() {
   const queryClient = new QueryClient();
@@ -19,7 +19,7 @@ export function App() {
           setIsInUploadMode={setIsInUploadMode}
         />
 
-        {isInUploadMode ? <UploadImagesForm /> : <ViewUploadedImagesView />}
+        {isInUploadMode ? <UploadImagesForm /> : <ViewUploadedImages />}
       </div>
     </QueryClientProvider>
   );
