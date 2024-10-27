@@ -26,6 +26,7 @@ function ErroredUploadTooltip({ task }: { task: FileUploadTask }) {
   return (
     <>
       <a
+        className="grid place-content-center h-4"
         data-tooltip-id={tooltipId}
         data-tooltip-content={task.error}
         data-tooltip-place="top"
@@ -65,7 +66,13 @@ function FilesUploadTaskGrid({ tasks }: { tasks: FileUploadTask[] }) {
 }
 
 export function UploadImagesForm() {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    accept: {
+      "image/gif": [".gif"],
+      "image/png": [".png"],
+      "image/jpeg": [".jpg", ".jpeg"],
+    },
+  });
 
   const [fileUploadTasks, updateFileUploadTasks] = useState<FileUploadTask[]>(
     []
@@ -150,7 +157,7 @@ export function UploadImagesForm() {
     <div
       {...getRootProps({
         className:
-          "flex place-content-center p-4 border-2 border-gray-300 border-dashed rounded-md bg-gray-100",
+          "flex place-content-center p-4 border-2 border-gray-300 border-dashed rounded-md bg-gray-100 cursor-pointer",
       })}
     >
       <input {...getInputProps()} />

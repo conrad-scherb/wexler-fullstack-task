@@ -17,14 +17,20 @@ export function App() {
         </div>
         <div className="flex gap-4 text-xl">
           <span
-            className={cn("w-12", !isInUploadMode && " font-semibold")}
+            className={cn(
+              "w-12 cursor-pointer hover:underline",
+              !isInUploadMode && " font-semibold underline"
+            )}
             onClick={() => setIsInUploadMode(false)}
           >
             View
           </span>
           |
           <span
-            className={cn("w-12", isInUploadMode && " font-semibold")}
+            className={cn(
+              "w-12 cursor-pointer hover:underline",
+              isInUploadMode && " font-semibold underline"
+            )}
             onClick={() => setIsInUploadMode(true)}
           >
             Upload
