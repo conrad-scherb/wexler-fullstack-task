@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 import { UploadedImage } from "./entity/uploaded-image.entity";
 
-const AppDataSource = new DataSource({
+export const AppDataSource = new DataSource({
   type: "sqlite",
   database: "wexler-test.sqlite",
   synchronize: true,
@@ -11,10 +11,10 @@ const AppDataSource = new DataSource({
   migrations: [],
 });
 
-export async function setupTypeORM(): Promise<void> {
-  await AppDataSource.initialize();
+export async function setupTypeORM(source: DataSource): Promise<void> {
+  await source.initialize();
 }
 
-export async function getImageRepository() {
-  return AppDataSource.getRepository(UploadedImage);
+export async function getImageRepository(source: DataSource) {
+  return source.getRepository(UploadedImage);
 }
