@@ -2,16 +2,13 @@ import axios from "axios";
 import { Response } from "express";
 import { Repository } from "typeorm";
 import { z } from "zod";
+import { MetadataSchema } from "./dto/uploaded-image-get.dto";
 import { UploadedImage } from "./entity/uploaded-image.entity";
 import { recordUploadedImage } from "./image-database";
 import { createImageThumbnail } from "./thumbnail-processor";
 
 const ImgurImageUploadResponseSchema = z.object({
-  data: z
-    .object({
-      link: z.string(),
-    })
-    .passthrough(),
+  data: MetadataSchema,
 });
 
 export type ImgurImageUploadResponse = z.infer<
@@ -35,14 +32,16 @@ export async function uploadImageToImgur(
     },
   });
 
-  const body = response.data;
-  const parsedBody = ImgurImageUploadResponseSchema.parse(body);
+  throw new Error("Not implemented");
 
-  return parsedBody;
+  // const body = response.data;
+  // const parsedBody = ImgurImageUploadResponseSchema.parse(body);
+
+  // return parsedBody;
 }
 
 function streamJSONEvent(res: Response, json: unknown): void {
-  // Use the data: prefix and the \n\n separator to confirm with EventSource standard
+  // Use the data: prefix and the \n\n separator to conform with event stream standard
   // See https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#event_stream_format
   res.write(`data: ${JSON.stringify(json)}\n\n`);
 }
@@ -53,8 +52,6 @@ export async function uploadAndRecordSingleImage(
   file: Express.Multer.File,
   id: string
 ): Promise<void> {
-  const start = performance.now();
-
   try {
     const imageDetails = await uploadImageToImgur(file);
 
@@ -72,8 +69,4 @@ export async function uploadAndRecordSingleImage(
       message: `${statusCode ?? "Unexpected error"}: ${e.message}`,
     });
   }
-
-  const end = performance.now();
-
-  console.log(`Image upload took ${end - start}ms`);
 }

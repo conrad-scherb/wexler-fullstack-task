@@ -8,7 +8,7 @@ export function UploadedImage(imageDetails: UploadedImageGetOneDto) {
 
   return (
     <div className="flex flex-col items-center">
-      <a href={`/api/image/${imageDetails.id}`} download>
+      <a className="pointer" href={`/api/image/${imageDetails.id}`} download>
         <img src={`data:image/jpeg;base64,${imageDetails.thumbnail}`} />
       </a>
       <div>{titleWithoutExtension}</div>

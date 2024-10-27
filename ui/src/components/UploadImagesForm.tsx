@@ -1,5 +1,8 @@
+import { faCheck, faSpinner, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useEffect, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
+import { Tooltip } from "react-tooltip";
 import { v4 } from "uuid";
 import { UploadSingleImageResultSchema } from "../../../api/src/dto/upload-image-response.dto";
 import { removeFileExtension } from "../util";
@@ -14,6 +17,25 @@ interface FileUploadTask {
   id: string;
   file: FileWithPath;
   status: FileUploadState;
+  error?: string;
+}
+
+function ErroredUploadTooltip({ task }: { task: FileUploadTask }) {
+  const tooltipId = `error-tooltip-${task.id}`;
+
+  return (
+    <>
+      <a
+        data-tooltip-id={tooltipId}
+        data-tooltip-content={task.error}
+        data-tooltip-place="top"
+      >
+        <FontAwesomeIcon color="red" icon={faTimes} />
+      </a>
+
+      <Tooltip id={tooltipId} />
+    </>
+  );
 }
 
 function FilesUploadTaskGrid({ tasks }: { tasks: FileUploadTask[] }) {
@@ -26,14 +48,16 @@ function FilesUploadTaskGrid({ tasks }: { tasks: FileUploadTask[] }) {
             alt={task.file.path}
             className="w-25 h-25 object-contain"
           />
+
           <div>{removeFileExtension(task.file.path ?? "")}</div>
-          <div>
-            {task.status === FileUploadState.Uploading
-              ? "Uploading..."
-              : task.status === FileUploadState.Done
-              ? "Done"
-              : "Failed"}
-          </div>
+
+          {task.status === FileUploadState.Uploading ? (
+            <FontAwesomeIcon icon={faSpinner} spin />
+          ) : task.status === FileUploadState.Done ? (
+            <FontAwesomeIcon color="green" icon={faCheck} />
+          ) : (
+            <ErroredUploadTooltip task={task} />
+          )}
         </div>
       ))}
     </div>
@@ -54,12 +78,16 @@ export function UploadImagesForm() {
         ? FileUploadState.Done
         : FileUploadState.Failed;
 
+    const error =
+      parsedMessage.result === "error" ? parsedMessage.message : undefined;
+
     updateFileUploadTasks((oldTasks) =>
       oldTasks.map((task) =>
         task.id === parsedMessage.id
           ? {
               ...task,
               status,
+              error,
             }
           : task
       )
