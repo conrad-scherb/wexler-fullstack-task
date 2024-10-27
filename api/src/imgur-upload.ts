@@ -32,12 +32,10 @@ export async function uploadImageToImgur(
     },
   });
 
-  throw new Error("Not implemented");
+  const body = response.data;
+  const parsedBody = ImgurImageUploadResponseSchema.parse(body);
 
-  // const body = response.data;
-  // const parsedBody = ImgurImageUploadResponseSchema.parse(body);
-
-  // return parsedBody;
+  return parsedBody;
 }
 
 function streamJSONEvent(res: Response, json: unknown): void {
