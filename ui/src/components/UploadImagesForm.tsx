@@ -110,7 +110,7 @@ export function UploadImagesForm() {
           "flex place-content-center p-4 border-2 border-gray-300 border-dashed rounded-md bg-gray-100 cursor-pointer",
       })}
     >
-      <input {...getInputProps()} />
+      <input data-testid="file-upload-input" {...getInputProps()} />
 
       {fileUploadTasks.length > 0 ? (
         <FilesUploadTaskGrid tasks={fileUploadTasks} />

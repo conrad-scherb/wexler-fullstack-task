@@ -49,7 +49,7 @@ function ErroredUploadTooltip({ task }: { task: FileUploadTask }) {
 
 export function InProgressImageUpload(task: FileUploadTask) {
   return (
-    <div className="flex items-center flex-col gap-2">
+    <div data-testid="in-progress-image-upload" className="flex items-center flex-col gap-2">
       <img
         src={URL.createObjectURL(task.file)}
         alt={task.file.path}

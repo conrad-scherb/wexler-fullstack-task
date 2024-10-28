@@ -6,7 +6,7 @@ export const TestDataSource = new DataSource({
   type: "sqlite",
   database: "backend-tests.sqlite",
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: [UploadedImage],
   subscribers: [],
   migrations: [],

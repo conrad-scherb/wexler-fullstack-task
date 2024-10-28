@@ -23,4 +23,36 @@ export const getUploadedImagesMock = http.get("/api/images", async () => {
   );
 });
 
-export const mswServer = setupServer(getUploadedImagesMock);
+export const uploadImagesMock = http.post(
+  "/api/upload",
+  async ({ request }) => {
+    const data = await request.formData();
+    const ids: string[] = JSON.parse(data?.get("ids") as string);
+
+    // For each provided ID mock a successful upload
+    const stream = new ReadableStream({
+      start(controller) {
+        ids.forEach((id) => {
+          controller.enqueue(
+            Buffer.from(
+              `data: ${JSON.stringify({ id, result: "success" })}\n\n`
+            )
+          );
+        });
+
+        controller.close();
+      },
+    });
+
+    return new HttpResponse(stream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Access-Control-Allow-Origin": "*",
+        Connection: "keep",
+      },
+    });
+  }
+);
+
+export const mswServer = setupServer(getUploadedImagesMock, uploadImagesMock);
