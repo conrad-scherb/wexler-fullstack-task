@@ -15,7 +15,9 @@ export function UploadedImage(imageDetails: UploadedImageGetOneDto) {
       >
         <img src={`data:image/jpeg;base64,${imageDetails.thumbnail}`} />
       </a>
-      <div data-testid="image-title">{titleWithoutExtension}</div>
+      <div className="w-25 break-words text-center" data-testid="image-title">
+        {titleWithoutExtension}
+      </div>
     </div>
   );
 }
